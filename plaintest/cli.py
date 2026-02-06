@@ -124,7 +124,7 @@ def report(tests_dir: Path):
             with case_file.open() as f:
                 metadata = frontmatter.load(f)
                 title = metadata.get("title", "N/A")
-                table.add_row(tc_id, str(case_file), title)
+                table.add_row(tc_id, str(case_file), str(title))
 
         console.print(table)
         console.print()
