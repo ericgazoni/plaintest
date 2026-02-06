@@ -6,6 +6,30 @@ import frontmatter
 import markdown
 from jinja2 import Environment, FileSystemLoader
 
+from markdown.treeprocessors import Treeprocessor
+from markdown import Extension
+
+
+class ImgStripper(Treeprocessor):
+    def run(self, root):
+        found = False
+        for parent in root.iter():
+            for child in list(parent):
+                if child.tag == "img":
+                    parent.remove(child)
+                    found = True
+
+        if found:
+            print(
+                "Warning: Found and removed <img> tags from Markdown content. "
+                "Images are not supported in the HTML report and have been stripped."
+            )
+
+
+class StripImagesExtension(Extension):
+    def extendMarkdown(self, md):
+        md.treeprocessors.register(ImgStripper(md), "img_stripper", 15)
+
 
 def get_test_function_source(
     file_path: Path,
@@ -138,7 +162,14 @@ def generate_html_report(
             markdown_content = post.content
 
         # Convert Markdown to HTML
-        md = markdown.Markdown(extensions=["fenced_code", "tables", "nl2br"])
+        md = markdown.Markdown(
+            extensions=[
+                "fenced_code",
+                "tables",
+                "nl2br",
+                StripImagesExtension(),
+            ]
+        )
         html_content = md.convert(markdown_content)
 
         # Get source code for all tests linked to this case

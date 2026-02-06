@@ -193,7 +193,6 @@ def html_report(tests_dir: Path, output: Path):
         raise click.Exit(0)
 
     # Generate the HTML report
-    root_dir = Path.cwd()
     generate_html_report(test_cases_dir, decorated_tests, tests_dir, output)
 
     console.print(f"[green]✓[/green] HTML report generated: {output}")

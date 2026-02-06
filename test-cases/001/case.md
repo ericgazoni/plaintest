@@ -8,5 +8,7 @@ tags: [demo, sample, dogfooding]
 2. Automatically generate report
 3. Check results in the report
 
+![Sample image](image.jpg)
+
 ## Expected
 Case is visible in the report
