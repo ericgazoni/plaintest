@@ -1,0 +1,29 @@
+[project]
+name = "plaintest"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "black>=26.1.0",
+    "click>=8.3.1",
+    "frontmatter>=3.0.8",
+]
+
+[dependency-groups]
+dev = [
+    "pre-commit>=4.5.1",
+    "pytest>=9.0.2",
+]
+
+[project.scripts]
+plaintest = "plaintest.cli:main"
+
+[tool.uv]
+package = true
+
+[tool.plaintest]
+test_cases_dir = "test-cases"
+
+[project.entry-points.pytest11]
+plaintest = "plaintest.plugin"
