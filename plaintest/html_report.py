@@ -416,14 +416,9 @@ def _highlight_python_code(code: str) -> str:
     from pygments.formatters import HtmlFormatter
 
     # Use HtmlFormatter with inline styles and the 'monokai' style
-    formatter = HtmlFormatter(
-        noclasses=True,
-        style='monokai',
-        nowrap=True
-    )
+    formatter = HtmlFormatter(noclasses=True, style="monokai", nowrap=True)
 
     # Highlight the code
     highlighted = highlight(code, PythonLexer(), formatter)
 
     return highlighted
-

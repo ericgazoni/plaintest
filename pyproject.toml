@@ -1,7 +1,11 @@
 [project]
 name = "plaintest"
 version = "0.1.0"
-description = "Add your description here"
+description = "A pytest plugin and CLI tool for managing plain-text test cases with markdown documentation"
+license = "MIT"
+authors = [
+    { name = "Eric Gazoni", email = "eric@adimian.com"}
+]
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
