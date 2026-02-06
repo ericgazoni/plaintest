@@ -4,6 +4,7 @@ from typing import Tuple
 
 import frontmatter
 import markdown
+from jinja2 import Environment, FileSystemLoader
 
 
 def get_test_function_source(
@@ -109,16 +110,15 @@ def generate_html_report(
     test_cases_dir: Path,
     decorated_tests: dict[str, list[str]],
     tests_dir: Path,
-    root_dir: Path,
     output_path: Path,
 ) -> None:
     """
     Generate an HTML report showing test cases with their pytest implementations.
 
     Args:
-        test_cases_dir: Directory containing test case markdown files
+        test_cases_dir: Directory containing test case Markdown files
         decorated_tests: dictionary mapping test case IDs to list of test node IDs
-        root_dir: Root directory of the project (for resolving test file paths)
+        tests_dir: Test files directory
         output_path: Where to write the HTML report
     """
     # Collect all test case data
@@ -130,14 +130,14 @@ def generate_html_report(
         if not case_file.exists():
             continue
 
-        # Parse the markdown file
+        # Parse the Markdown file
         with case_file.open("r", encoding="utf-8") as f:
             post = frontmatter.load(f)
             title = post.get("title", f"Test Case {tc_id}")
             tags = post.get("tags", [])
             markdown_content = post.content
 
-        # Convert markdown to HTML
+        # Convert Markdown to HTML
         md = markdown.Markdown(extensions=["fenced_code", "tables", "nl2br"])
         html_content = md.convert(markdown_content)
 
@@ -171,242 +171,27 @@ def generate_html_report(
 
 
 def _generate_html_template(test_case_data: list[dict]) -> str:
-    """Generate the complete HTML document."""
+    """Generate the complete HTML document using Jinja2 templates."""
+    # Set up Jinja2 environment
+    templates_dir = Path(__file__).parent / "templates"
+    env = Environment(loader=FileSystemLoader(templates_dir))
 
-    # Build the test case sections
-    test_case_sections = []
+    # Load templates
+    report_template = env.get_template("report.html.j2")
+    styles_template = env.get_template("styles.css.j2")
+
+    # Process test case data to highlight source code
     for tc in test_case_data:
-        tags_html = " ".join(
-            [f'<span class="tag">{tag}</span>' for tag in tc["tags"]]
-        )
-
-        # Build test source sections
-        test_sources_html = []
         for test_src in tc["test_sources"]:
-            test_sources_html.append(f"""
-                <div class="test-source">
-                    <div class="test-node-id">{test_src['node_id']}</div>
-                    <pre><code class="language-python">{_highlight_python_code(test_src['source'])}</code></pre>
-                </div>
-            """)
+            test_src["source"] = _highlight_python_code(test_src["source"])
 
-        test_case_sections.append(f"""
-        <div class="test-case-container" id="tc-{tc['id']}">
-            <div class="test-case-header">
-                <h2>Test Case {tc['id']}: {_escape_html(tc['title'])}</h2>
-                <div class="tags">{tags_html}</div>
-            </div>
-            <div class="split-view">
-                <div class="test-case-markdown">
-                    <h3>Test Case Specification</h3>
-                    {tc['markdown_html']}
-                </div>
-                <div class="test-implementation">
-                    <h3>Test Implementation</h3>
-                    {''.join(test_sources_html)}
-                </div>
-            </div>
-        </div>
-        """)
+    # Render the styles
+    styles = styles_template.render()
 
-    return f"""<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Plaintest Validation Report</title>
-    <style>
-        * {{
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }}
-        
-        body {{
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            line-height: 1.6;
-            color: #333;
-            background-color: #f5f5f5;
-        }}
-        
-        header {{
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 2rem;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }}
-        
-        header h1 {{
-            font-size: 2rem;
-            margin-bottom: 0.5rem;
-        }}
-        
-        header p {{
-            opacity: 0.9;
-            font-size: 1.1rem;
-        }}
-        
-        .container {{
-            max-width: 100%;
-            padding: 2rem;
-        }}
-        
-        .test-case-container {{
-            background: white;
-            margin-bottom: 2rem;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            overflow: hidden;
-        }}
-        
-        .test-case-header {{
-            padding: 1.5rem;
-            background: #f8f9fa;
-            border-bottom: 2px solid #e9ecef;
-        }}
-        
-        .test-case-header h2 {{
-            color: #667eea;
-            margin-bottom: 0.5rem;
-        }}
-        
-        .tags {{
-            display: flex;
-            gap: 0.5rem;
-            flex-wrap: wrap;
-        }}
-        
-        .tag {{
-            background: #667eea;
-            color: white;
-            padding: 0.25rem 0.75rem;
-            border-radius: 12px;
-            font-size: 0.85rem;
-        }}
-        
-        .split-view {{
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            min-height: 400px;
-        }}
-        
-        .test-case-markdown,
-        .test-implementation {{
-            padding: 2rem;
-            overflow-y: auto;
-        }}
-        
-        .test-case-markdown {{
-            border-right: 2px solid #e9ecef;
-            background: #fafafa;
-        }}
-        
-        .test-case-markdown h3,
-        .test-implementation h3 {{
-            color: #495057;
-            margin-bottom: 1rem;
-            font-size: 1.2rem;
-            padding-bottom: 0.5rem;
-            border-bottom: 2px solid #dee2e6;
-        }}
-        
-        .test-case-markdown h2 {{
-            color: #343a40;
-            margin-top: 1.5rem;
-            margin-bottom: 0.75rem;
-            font-size: 1.3rem;
-        }}
-        
-        .test-case-markdown ul,
-        .test-case-markdown ol {{
-            margin-left: 1.5rem;
-            margin-bottom: 1rem;
-        }}
-        
-        .test-case-markdown li {{
-            margin-bottom: 0.5rem;
-        }}
-        
-        .test-case-markdown p {{
-            margin-bottom: 1rem;
-        }}
-        
-        .test-source {{
-            margin-bottom: 2rem;
-        }}
-        
-        .test-node-id {{
-            font-family: 'Monaco', 'Menlo', 'Courier New', monospace;
-            background: #f1f3f5;
-            padding: 0.5rem 1rem;
-            border-left: 4px solid #667eea;
-            margin-bottom: 0.5rem;
-            font-size: 0.9rem;
-            color: #495057;
-            border-radius: 4px;
-        }}
-        
-        pre {{
-            background: #282c34;
-            padding: 1rem;
-            border-radius: 6px;
-            overflow-x: auto;
-            margin: 0;
-        }}
-        
-        code {{
-            font-family: 'Monaco', 'Menlo', 'Courier New', monospace;
-            font-size: 0.9rem;
-            color: #abb2bf;
-        }}
-        
-        .language-python {{
-            display: block;
-        }}
-        
-        @media (max-width: 1200px) {{
-            .split-view {{
-                grid-template-columns: 1fr;
-            }}
-            
-            .test-case-markdown {{
-                border-right: none;
-                border-bottom: 2px solid #e9ecef;
-            }}
-        }}
-        
-        /* Syntax highlighting for Python */
-        .language-python {{
-            color: #abb2bf;
-        }}
-    </style>
-</head>
-<body>
-    <header>
-        <h1>📋 Plaintest Validation Report</h1>
-        <p>Test Case Specifications vs. Pytest Implementations</p>
-    </header>
-    
-    <div class="container">
-        {''.join(test_case_sections)}
-    </div>
-    
-    <script>
-        // Navigation and interactivity could go here
-    </script>
-</body>
-</html>"""
+    # Render the report
+    html = report_template.render(test_cases=test_case_data, styles=styles)
 
-
-def _escape_html(text: str) -> str:
-    """Escape HTML special characters."""
-    return (
-        text.replace("&", "&amp;")
-        .replace("<", "&lt;")
-        .replace(">", "&gt;")
-        .replace('"', "&quot;")
-        .replace("'", "&#39;")
-    )
+    return html
 
 
 def _highlight_python_code(code: str) -> str:

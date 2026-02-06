@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plaintest Validation Report</title>
+    <style>
+        {{ styles }}
+    </style>
+</head>
+<body>
+    <header>
+        <h1>📋 Plaintest Validation Report</h1>
+        <p>Test Case Specifications vs. Pytest Implementations</p>
+    </header>
+
+    <div class="container">
+        {% for tc in test_cases %}
+        <div class="test-case-container" id="tc-{{ tc.id }}">
+            <div class="test-case-header">
+                <h2>Test Case {{ tc.id }}: {{ tc.title }}</h2>
+                <div class="tags">
+                    {% for tag in tc.tags %}
+                    <span class="tag">{{ tag }}</span>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="split-view">
+                <div class="test-case-markdown">
+                    <h3>Test Case Specification</h3>
+                    {{ tc.markdown_html | safe }}
+                </div>
+                <div class="test-implementation">
+                    <h3>Test Implementation</h3>
+                    {% for test_src in tc.test_sources %}
+                    <div class="test-source">
+                        <div class="test-node-id">{{ test_src.node_id }}</div>
+                        <pre><code class="language-python">{{ test_src.source | safe }}</code></pre>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <script>
+        // Navigation and interactivity could go here
+    </script>
+</body>
+</html>
+
