@@ -1,6 +1,9 @@
 import click
+from pathlib import Path
 from rich.console import Console
 from rich.prompt import Prompt, Confirm
+from rich.table import Table
+from plaintest.analysis import find_undecorated_tests
 from plaintest.config import get_test_cases_dir, get_max_tc_id
 from plaintest.template import TEMPLATE
 
@@ -57,3 +60,75 @@ def add(title: str):
         title = None
 
     console.print("[bold green]Done![/bold green]")
+
+
+@main.command()
+@click.option(
+    "--tests-dir",
+    type=click.Path(exists=True, file_okay=False, path_type=Path),
+    default=Path("tests"),
+    help="Directory containing test files",
+)
+def report(tests_dir: Path):
+    """Generate a coverage report showing test case status"""
+    test_cases_dir = get_test_cases_dir()
+
+    if not test_cases_dir.exists():
+        console.print(
+            f"[red]✗[/red] Test cases directory {test_cases_dir} doesn't exist"
+        )
+        console.print("[yellow]Run 'plaintest init' to create it[/yellow]")
+        raise click.Exit(1)
+
+    # Perform analysis
+    console.print("[dim]Analyzing test coverage...[/dim]")
+    results = find_undecorated_tests(test_cases_dir, tests_dir)
+
+    total_cases = len(results.test_cases_without_tests) + len(
+        results.covered_test_cases
+    )
+
+    if total_cases == 0:
+        console.print("[yellow]No test cases found[/yellow]")
+        raise click.Exit(0)
+
+    # Calculate statistics
+    covered_count = len(results.covered_test_cases)
+    uncovered_count = len(results.test_cases_without_tests)
+    coverage_percentage = (covered_count / total_cases) * 100
+
+    # Display summary
+    console.print()
+    console.print(f"Total test cases: {total_cases}")
+    console.print(f"Cases with tests: [green]{covered_count}[/green]")
+    console.print(f"Cases without tests: [red]{uncovered_count}[/red]")
+    console.print(
+        f"Coverage: [bold cyan]{coverage_percentage:.1f}%[/bold cyan]"
+    )
+    console.print()
+
+    # Display uncovered cases in a table
+    if uncovered_count > 0:
+        console.print("[bold red]Cases without tests[/bold red]")
+        table = Table(show_header=True, header_style="bold magenta")
+        table.add_column(
+            "Test Case ID", style="cyan", width=15, justify="center"
+        )
+        table.add_column("Case File", style="dim")
+
+        for tc_id in results.test_cases_without_tests:
+            case_file = test_cases_dir / tc_id / "case.md"
+            table.add_row(tc_id, str(case_file))
+
+        console.print(table)
+        console.print()
+
+    # Display warning about tests without cases
+    if results.tests_without_test_cases:
+        console.print(
+            f"[yellow]⚠ Found {len(results.tests_without_test_cases)} "
+            f"test(s) marked with non-existent case IDs[/yellow]"
+        )
+
+    # Exit with the number of uncovered cases
+    raise SystemExit(uncovered_count)

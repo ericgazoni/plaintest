@@ -114,8 +114,7 @@ class TestGetDecoratedTests:
     def test_get_decorated_tests_with_tc_decorator(self, tmp_path):
         """Test finding tests with @tc decorator"""
         test_file = tmp_path / "test_sample.py"
-        test_file.write_text(
-            """
+        test_file.write_text("""
 from plaintest import tc
 
 @tc("001")
@@ -128,8 +127,7 @@ def test_two():
 
 def test_undecorated():
     pass
-"""
-        )
+""")
 
         result = get_decorated_tests(tmp_path)
 
@@ -142,25 +140,21 @@ def test_undecorated():
     def test_get_decorated_tests_multiple_files(self, tmp_path):
         """Test finding tests across multiple files"""
         test_file1 = tmp_path / "test_first.py"
-        test_file1.write_text(
-            """
+        test_file1.write_text("""
 from plaintest import tc
 
 @tc("001")
 def test_one():
     pass
-"""
-        )
+""")
         test_file2 = tmp_path / "test_second.py"
-        test_file2.write_text(
-            """
+        test_file2.write_text("""
 from plaintest import tc
 
 @tc("002")
 def test_two():
     pass
-"""
-        )
+""")
 
         result = get_decorated_tests(tmp_path)
 
@@ -171,8 +165,7 @@ def test_two():
     def test_get_decorated_tests_same_tc_multiple_tests(self, tmp_path):
         """Test when multiple tests have the same tc_id"""
         test_file = tmp_path / "test_sample.py"
-        test_file.write_text(
-            """
+        test_file.write_text("""
 from plaintest import tc
 
 @tc("001")
@@ -182,8 +175,7 @@ def test_one():
 @tc("001")
 def test_one_variant():
     pass
-"""
-        )
+""")
 
         result = get_decorated_tests(tmp_path)
 
@@ -204,15 +196,13 @@ def test_one_variant():
         nested_dir = tmp_path / "tests" / "integration"
         nested_dir.mkdir(parents=True)
         test_file = nested_dir / "test_nested.py"
-        test_file.write_text(
-            """
+        test_file.write_text("""
 from plaintest import tc
 
 @tc("001")
 def test_nested():
     pass
-"""
-        )
+""")
 
         result = get_decorated_tests(tmp_path)
 
@@ -223,8 +213,7 @@ def test_nested():
     def test_get_decorated_tests_with_class_methods(self, tmp_path):
         """Test finding tests in class methods"""
         test_file = tmp_path / "test_class.py"
-        test_file.write_text(
-            """
+        test_file.write_text("""
 from plaintest import tc
 
 class TestSuite:
@@ -238,8 +227,7 @@ class TestSuite:
 @tc("002")
 def test_function():
     pass
-"""
-        )
+""")
 
         result = get_decorated_tests(tmp_path)
 
@@ -270,8 +258,7 @@ class TestFindUndecoratedTests:
         tests_dir = tmp_path / "tests"
         tests_dir.mkdir()
         test_file = tests_dir / "test_sample.py"
-        test_file.write_text(
-            """
+        test_file.write_text("""
 from plaintest import tc
 
 @tc("001")
@@ -281,8 +268,7 @@ def test_one():
 @tc("002")
 def test_two():
     pass
-"""
-        )
+""")
 
         result = find_undecorated_tests(test_cases_dir, tmp_path)
 
@@ -312,15 +298,13 @@ def test_two():
         tests_dir = tmp_path / "tests"
         tests_dir.mkdir()
         test_file = tests_dir / "test_sample.py"
-        test_file.write_text(
-            """
+        test_file.write_text("""
 from plaintest import tc
 
 @tc("001")
 def test_one():
     pass
-"""
-        )
+""")
 
         result = find_undecorated_tests(test_cases_dir, tmp_path)
 
@@ -341,8 +325,7 @@ def test_one():
         tests_dir = tmp_path / "tests"
         tests_dir.mkdir()
         test_file = tests_dir / "test_sample.py"
-        test_file.write_text(
-            """
+        test_file.write_text("""
 from plaintest import tc
 
 @tc("001")
@@ -356,8 +339,7 @@ def test_two():
 @tc("999")
 def test_no_case():
     pass
-"""
-        )
+""")
 
         result = find_undecorated_tests(test_cases_dir, tmp_path)
 
@@ -379,8 +361,7 @@ def test_no_case():
         tests_dir = tmp_path / "tests"
         tests_dir.mkdir()
         test_file = tests_dir / "test_sample.py"
-        test_file.write_text(
-            """
+        test_file.write_text("""
 from plaintest import tc
 
 @tc("001")
@@ -394,8 +375,7 @@ def test_three():
 @tc("005")
 def test_five():
     pass
-"""
-        )
+""")
 
         result = find_undecorated_tests(test_cases_dir, tmp_path)
 
@@ -412,15 +392,13 @@ def test_five():
         tests_dir = tmp_path / "tests"
         tests_dir.mkdir()
         test_file = tests_dir / "test_sample.py"
-        test_file.write_text(
-            """
+        test_file.write_text("""
 from plaintest import tc
 
 @tc("001")
 def test_one():
     pass
-"""
-        )
+""")
 
         result = find_undecorated_tests(test_cases_dir, tmp_path)
 
