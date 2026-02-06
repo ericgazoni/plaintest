@@ -1,3 +1,4 @@
+from plaintest import tc
 from plaintest.analysis import (
     list_all_test_cases,
     get_decorated_tests,
@@ -8,6 +9,7 @@ from plaintest.analysis import (
 class TestListAllTestCases:
     """Tests for listing all test cases from test-cases directory"""
 
+    @tc("003")
     def test_list_test_cases_with_standard_structure(self, tmp_path):
         """Test listing test cases from a standard directory structure"""
         # Create test case directories
@@ -29,6 +31,7 @@ class TestListAllTestCases:
 
         assert result == ["001", "002", "003"]
 
+    @tc("004")
     def test_list_test_cases_with_non_numeric_dirs(self, tmp_path):
         """Test that non-numeric directories are ignored"""
         test_cases_dir = tmp_path / "test-cases"
