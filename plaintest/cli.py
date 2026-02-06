@@ -1,4 +1,5 @@
 import click
+import frontmatter
 from pathlib import Path
 from rich.console import Console
 from rich.prompt import Prompt, Confirm
@@ -115,10 +116,15 @@ def report(tests_dir: Path):
             "Test Case ID", style="cyan", width=15, justify="center"
         )
         table.add_column("Case File", style="dim")
+        table.add_column("Title", style="yellow")
 
         for tc_id in results.test_cases_without_tests:
             case_file = test_cases_dir / tc_id / "case.md"
-            table.add_row(tc_id, str(case_file))
+
+            with case_file.open() as f:
+                metadata = frontmatter.load(f)
+                title = metadata.get("title", "N/A")
+                table.add_row(tc_id, str(case_file), title)
 
         console.print(table)
         console.print()
