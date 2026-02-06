@@ -4,10 +4,9 @@ import ast
 import re
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Dict, List
 
 
-def list_all_test_cases(test_cases_dir: Path) -> List[str]:
+def list_all_test_cases(test_cases_dir: Path) -> list[str]:
     """
     List all test case IDs from the test-cases directory.
 
@@ -39,7 +38,7 @@ def list_all_test_cases(test_cases_dir: Path) -> List[str]:
     return test_case_ids
 
 
-def get_decorated_tests(root_dir: Path) -> Dict[str, List[str]]:
+def get_decorated_tests(root_dir: Path) -> dict[str, list[str]]:
     """
     Find all pytest tests decorated with @tc marker.
 
@@ -50,10 +49,10 @@ def get_decorated_tests(root_dir: Path) -> Dict[str, List[str]]:
         root_dir: Root directory to search for test files
 
     Returns:
-        Dictionary mapping test case IDs to list of test node IDs
+        dictionary mapping test case IDs to list of test node IDs
         Format: {"001": ["test_file.py::test_function", ...], ...}
     """
-    decorated_tests: Dict[str, List[str]] = {}
+    decorated_tests: dict[str, list[str]] = {}
 
     # Find all Python test files
     test_files = list(root_dir.rglob("test_*.py"))
@@ -77,7 +76,7 @@ def get_decorated_tests(root_dir: Path) -> Dict[str, List[str]]:
 
 
 def _extract_tc_decorators(
-    tree: ast.AST, file_path: Path, result: Dict[str, List[str]]
+    tree: ast.AST, file_path: Path, result: dict[str, list[str]]
 ) -> None:
     """
     Extract @tc decorator information from an AST.
@@ -85,7 +84,7 @@ def _extract_tc_decorators(
     Args:
         tree: AST of the Python file
         file_path: Relative path to the file
-        result: Dictionary to populate with results
+        result: dictionary to populate with results
     """
     # Use iter_child_nodes to only get top-level nodes (not nested)
     for node in ast.iter_child_nodes(tree):
@@ -105,7 +104,7 @@ def _process_function_def(
     func_node: ast.FunctionDef,
     file_path: Path,
     class_name: str | None,
-    result: Dict[str, List[str]],
+    result: dict[str, list[str]],
 ) -> None:
     """
     Process a function definition and extract @tc decorator.
@@ -114,7 +113,7 @@ def _process_function_def(
         func_node: AST node for the function
         file_path: Relative path to the file
         class_name: Name of the containing class, or None for standalone functions
-        result: Dictionary to populate with results
+        result: dictionary to populate with results
     """
     tc_id = _get_tc_id_from_decorators(func_node.decorator_list)
     if tc_id:
@@ -129,7 +128,7 @@ def _process_function_def(
         result[tc_id].append(test_node_id)
 
 
-def _get_tc_id_from_decorators(decorators: List[ast.expr]) -> str | None:
+def _get_tc_id_from_decorators(decorators: list[ast.expr]) -> str | None:
     """
     Extract tc_id from decorator list.
 
