@@ -3,6 +3,17 @@ import json
 from pathlib import Path
 
 
+def pytest_addoption(parser):
+    """Add command line option for plaintest report generation"""
+    group = parser.getgroup("plaintest")
+    group.addoption(
+        "--plaintest-report",
+        action="store_true",
+        default=False,
+        help="Generate plaintest results report",
+    )
+
+
 def pytest_configure(config):
     """Register markers"""
     config.addinivalue_line("markers", "tc(id): link test to test case ID")
@@ -41,6 +52,10 @@ def pytest_runtest_makereport(item, call):
 
 def pytest_sessionfinish(session):
     """Save results after test run"""
+    # Only generate report if --plaintest-report flag is provided
+    if not session.config.getoption("--plaintest-report"):
+        return
+
     results = getattr(session.config, "_plaintest_results", [])
 
     if results:
