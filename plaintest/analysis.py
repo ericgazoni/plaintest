@@ -132,7 +132,7 @@ def _get_tc_id_from_decorators(decorators: list[ast.expr]) -> str | None:
     """
     Extract tc_id from decorator list.
 
-    Looks for @tc("001") pattern.
+    Looks for @tc("001") or @pytest.mark.tc("001") patterns.
 
     Args:
         decorators: List of decorator AST nodes
@@ -143,6 +143,7 @@ def _get_tc_id_from_decorators(decorators: list[ast.expr]) -> str | None:
     for decorator in decorators:
         # Handle @tc("001")
         if isinstance(decorator, ast.Call):
+            # Direct call: @tc("001")
             if (
                 isinstance(decorator.func, ast.Name)
                 and decorator.func.id == "tc"
@@ -151,6 +152,32 @@ def _get_tc_id_from_decorators(decorators: list[ast.expr]) -> str | None:
                     decorator.args[0], ast.Constant
                 ):
                     return str(decorator.args[0].value)
+
+            # Attribute call: @pytest.mark.tc("001")
+            if isinstance(decorator.func, ast.Attribute):
+                # Check if it's pytest.mark.tc or just mark.tc
+                if decorator.func.attr == "tc":
+                    # Verify it's actually pytest.mark.tc or mark.tc
+                    if isinstance(decorator.func.value, ast.Attribute):
+                        # pytest.mark.tc pattern
+                        if (
+                            decorator.func.value.attr == "mark"
+                            and isinstance(
+                                decorator.func.value.value, ast.Name
+                            )
+                            and decorator.func.value.value.id == "pytest"
+                        ):
+                            if decorator.args and isinstance(
+                                decorator.args[0], ast.Constant
+                            ):
+                                return str(decorator.args[0].value)
+                    elif isinstance(decorator.func.value, ast.Name):
+                        # Could be mark.tc if imported as "from pytest import mark"
+                        if decorator.func.value.id == "mark":
+                            if decorator.args and isinstance(
+                                decorator.args[0], ast.Constant
+                            ):
+                                return str(decorator.args[0].value)
 
     return None
 

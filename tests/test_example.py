@@ -1,6 +1,6 @@
-from plaintest import tc
+import pytest
 
 
-@tc("001")
+@pytest.mark.tc("001")
 def test_example():
     assert True
