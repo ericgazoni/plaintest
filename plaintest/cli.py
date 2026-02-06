@@ -4,9 +4,10 @@ from pathlib import Path
 from rich.console import Console
 from rich.prompt import Prompt, Confirm
 from rich.table import Table
-from plaintest.analysis import find_undecorated_tests
+from plaintest.analysis import find_undecorated_tests, get_decorated_tests
 from plaintest.config import get_test_cases_dir, get_max_tc_id
 from plaintest.template import TEMPLATE
+from plaintest.html_report import generate_html_report
 
 console = Console()
 
@@ -157,3 +158,45 @@ def report(tests_dir: Path):
 
     # Exit with the number of uncovered cases
     raise SystemExit(uncovered_count)
+
+
+@main.command()
+@click.option(
+    "--tests-dir",
+    type=click.Path(exists=True, file_okay=False, path_type=Path),
+    default=Path("tests"),
+    help="Directory containing test files",
+)
+@click.option(
+    "--output",
+    type=click.Path(path_type=Path),
+    default=Path(".plaintest/plaintest-report.html"),
+    help="Output path for the HTML report",
+)
+def html_report(tests_dir: Path, output: Path):
+    """Generate HTML report showing test cases alongside their pytest implementations"""
+    test_cases_dir = get_test_cases_dir()
+
+    if not test_cases_dir.exists():
+        console.print(
+            f"[red]✗[/red] Test cases directory {test_cases_dir} doesn't exist"
+        )
+        console.print("[yellow]Run 'plaintest init' to create it[/yellow]")
+        raise click.Exit(1)
+
+    # Get decorated tests
+    console.print("[dim]Analyzing tests and generating report...[/dim]")
+    decorated_tests = get_decorated_tests(tests_dir)
+
+    if not decorated_tests:
+        console.print("[yellow]No tests with @tc decorators found[/yellow]")
+        raise click.Exit(0)
+
+    # Generate the HTML report
+    root_dir = Path.cwd()
+    generate_html_report(
+        test_cases_dir, decorated_tests, tests_dir, root_dir, output
+    )
+
+    console.print(f"[green]✓[/green] HTML report generated: {output}")
+    console.print(f"[dim]Open the file in a browser to view the report[/dim]")
