@@ -186,7 +186,7 @@ def _generate_html_template(test_case_data: list[dict]) -> str:
             test_sources_html.append(f"""
                 <div class="test-source">
                     <div class="test-node-id">{test_src['node_id']}</div>
-                    <pre><code class="language-python">{_escape_html(test_src['source'])}</code></pre>
+                    <pre><code class="language-python">{_highlight_python_code(test_src['source'])}</code></pre>
                 </div>
             """)
 
@@ -392,33 +392,7 @@ def _generate_html_template(test_case_data: list[dict]) -> str:
     </div>
     
     <script>
-        // Add syntax highlighting for Python keywords
-        document.addEventlistener('DOMContentLoaded', function() {{
-            const keywords = ['def', 'class', 'import', 'from', 'return', 'if', 'else', 'elif', 
-                            'for', 'while', 'try', 'except', 'finally', 'with', 'as', 'assert',
-                            'True', 'False', 'None', 'and', 'or', 'not', 'in', 'is'];
-            
-            document.querySelectorAll('code.language-python').forEach(block => {{
-                let html = block.innerHTML;
-                
-                // Highlight decorators
-                html = html.replace(/(@\w+)/g, '<span style="color: #c678dd;">$1</span>');
-                
-                // Highlight strings
-                html = html.replace(/(".*?"|'.*?')/g, '<span style="color: #98c379;">$1</span>');
-                
-                // Highlight comments
-                html = html.replace(/(#.*$)/gm, '<span style="color: #5c6370;">$1</span>');
-                
-                // Highlight keywords
-                keywords.forEach(keyword => {{
-                    const regex = new RegExp('\\\\b(' + keyword + ')\\\\b', 'g');
-                    html = html.replace(regex, '<span style="color: #c678dd;">$1</span>');
-                }});
-                
-                block.innerHTML = html;
-            }});
-        }});
+        // Navigation and interactivity could go here
     </script>
 </body>
 </html>"""
@@ -433,3 +407,98 @@ def _escape_html(text: str) -> str:
         .replace('"', "&quot;")
         .replace("'", "&#39;")
     )
+
+
+def _highlight_python_code(code: str) -> str:
+    """Apply syntax highlighting to Python code."""
+    import re
+
+    # First, escape HTML
+    code = _escape_html(code)
+
+    # Define color scheme
+    KEYWORD_COLOR = "#c678dd"
+    STRING_COLOR = "#98c379"
+    COMMENT_COLOR = "#5c6370"
+    DECORATOR_COLOR = "#56b6c2"
+    NUMBER_COLOR = "#d19a66"
+
+    # Highlight comments (must be done first to avoid highlighting inside comments)
+    code = re.sub(
+        r"(#.*?)$",
+        f'<span style="color: {COMMENT_COLOR};">\\1</span>',
+        code,
+        flags=re.MULTILINE,
+    )
+
+    # Highlight strings (triple-quoted, then single/double quoted)
+    code = re.sub(
+        r'(""".*?"""|\'\'\'.*?\'\'\')',
+        f'<span style="color: {STRING_COLOR};">\\1</span>',
+        code,
+        flags=re.DOTALL,
+    )
+    code = re.sub(
+        r'(?<!<span style="color: #5c6370;">)(f?r?b?"[^"]*"|f?r?b?\'[^\']*\')',
+        f'<span style="color: {STRING_COLOR};">\\1</span>',
+        code,
+    )
+
+    # Highlight decorators
+    code = re.sub(
+        r"(@[\w.]+)",
+        f'<span style="color: {DECORATOR_COLOR};">\\1</span>',
+        code,
+    )
+
+    # Highlight numbers
+    code = re.sub(
+        r"\b(\d+\.?\d*)\b",
+        f'<span style="color: {NUMBER_COLOR};">\\1</span>',
+        code,
+    )
+
+    # Highlight keywords
+    keywords = [
+        "def",
+        "class",
+        "import",
+        "from",
+        "return",
+        "if",
+        "else",
+        "elif",
+        "for",
+        "while",
+        "try",
+        "except",
+        "finally",
+        "with",
+        "as",
+        "assert",
+        "True",
+        "False",
+        "None",
+        "and",
+        "or",
+        "not",
+        "in",
+        "is",
+        "lambda",
+        "pass",
+        "break",
+        "continue",
+        "raise",
+        "yield",
+        "async",
+        "await",
+    ]
+
+    for keyword in keywords:
+        code = re.sub(
+            rf"\b({keyword})\b",
+            f'<span style="color: {KEYWORD_COLOR};">\\1</span>',
+            code,
+        )
+
+    return code
