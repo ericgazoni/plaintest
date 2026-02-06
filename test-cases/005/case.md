@@ -1,5 +1,5 @@
 ---
-title: collect decorated tests from test folder
+title: Collect decorated tests from test folder
 tags: []
 ---
 

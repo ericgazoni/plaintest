@@ -1,5 +1,5 @@
 ---
-title: cases with non-numeric dir names are ignored
+title: Cases with non-numeric dir names are ignored
 tags: []
 ---
 

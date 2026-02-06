@@ -1,5 +1,5 @@
 ---
-title: find all cases with standard structure
+title: Find all cases with standard structure
 tags: []
 ---
 

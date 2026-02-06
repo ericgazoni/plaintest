@@ -1,6 +1,6 @@
 ---
 title: sample case 
-tags: [demo, sample]
+tags: [demo, sample, dogfooding]
 ---
 
 ## Steps

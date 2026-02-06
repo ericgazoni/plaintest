@@ -48,7 +48,7 @@ def add(title: str):
         output_dir = test_dir / f"{tc_id:0>3}"
         output_dir.mkdir(parents=True, exist_ok=True)
         tc_file = output_dir / "case.md"
-        tc_file.write_text(TEMPLATE.safe_substitute(title=title))
+        tc_file.write_text(TEMPLATE.safe_substitute(title=title.capitalize()))
         console.print(f"[green]✓[/green] Created {tc_file}")
 
         # Ask if user wants to add another

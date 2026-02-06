@@ -1,5 +1,5 @@
 ---
-title: Support subfolders for test collection
+title: Find cases without tests
 tags: []
 ---
 
