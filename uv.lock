@@ -169,6 +169,7 @@ dependencies = [
     { name = "black" },
     { name = "click" },
     { name = "markdown" },
+    { name = "pygments" },
     { name = "python-frontmatter" },
     { name = "rich" },
 ]
@@ -184,6 +185,7 @@ requires-dist = [
     { name = "black", specifier = ">=26.1.0" },
     { name = "click", specifier = ">=8.3.1" },
     { name = "markdown", specifier = ">=3.10.1" },
+    { name = "pygments", specifier = ">=2.19.2" },
     { name = "python-frontmatter", specifier = ">=1.1.0" },
     { name = "rich", specifier = ">=13.0.0" },
 ]

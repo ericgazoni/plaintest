@@ -410,95 +410,20 @@ def _escape_html(text: str) -> str:
 
 
 def _highlight_python_code(code: str) -> str:
-    """Apply syntax highlighting to Python code."""
-    import re
+    """Apply syntax highlighting to Python code using Pygments."""
+    from pygments import highlight
+    from pygments.lexers import PythonLexer
+    from pygments.formatters import HtmlFormatter
 
-    # First, escape HTML
-    code = _escape_html(code)
-
-    # Define color scheme
-    KEYWORD_COLOR = "#c678dd"
-    STRING_COLOR = "#98c379"
-    COMMENT_COLOR = "#5c6370"
-    DECORATOR_COLOR = "#56b6c2"
-    NUMBER_COLOR = "#d19a66"
-
-    # Highlight comments (must be done first to avoid highlighting inside comments)
-    code = re.sub(
-        r"(#.*?)$",
-        f'<span style="color: {COMMENT_COLOR};">\\1</span>',
-        code,
-        flags=re.MULTILINE,
+    # Use HtmlFormatter with inline styles and the 'monokai' style
+    formatter = HtmlFormatter(
+        noclasses=True,
+        style='monokai',
+        nowrap=True
     )
 
-    # Highlight strings (triple-quoted, then single/double quoted)
-    code = re.sub(
-        r'(""".*?"""|\'\'\'.*?\'\'\')',
-        f'<span style="color: {STRING_COLOR};">\\1</span>',
-        code,
-        flags=re.DOTALL,
-    )
-    code = re.sub(
-        r'(?<!<span style="color: #5c6370;">)(f?r?b?"[^"]*"|f?r?b?\'[^\']*\')',
-        f'<span style="color: {STRING_COLOR};">\\1</span>',
-        code,
-    )
+    # Highlight the code
+    highlighted = highlight(code, PythonLexer(), formatter)
 
-    # Highlight decorators
-    code = re.sub(
-        r"(@[\w.]+)",
-        f'<span style="color: {DECORATOR_COLOR};">\\1</span>',
-        code,
-    )
+    return highlighted
 
-    # Highlight numbers
-    code = re.sub(
-        r"\b(\d+\.?\d*)\b",
-        f'<span style="color: {NUMBER_COLOR};">\\1</span>',
-        code,
-    )
-
-    # Highlight keywords
-    keywords = [
-        "def",
-        "class",
-        "import",
-        "from",
-        "return",
-        "if",
-        "else",
-        "elif",
-        "for",
-        "while",
-        "try",
-        "except",
-        "finally",
-        "with",
-        "as",
-        "assert",
-        "True",
-        "False",
-        "None",
-        "and",
-        "or",
-        "not",
-        "in",
-        "is",
-        "lambda",
-        "pass",
-        "break",
-        "continue",
-        "raise",
-        "yield",
-        "async",
-        "await",
-    ]
-
-    for keyword in keywords:
-        code = re.sub(
-            rf"\b({keyword})\b",
-            f'<span style="color: {KEYWORD_COLOR};">\\1</span>',
-            code,
-        )
-
-    return code
