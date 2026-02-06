@@ -13,11 +13,17 @@ class TestListAllTestCases:
         # Create test case directories
         test_cases_dir = tmp_path / "test-cases"
         (test_cases_dir / "001").mkdir(parents=True)
-        (test_cases_dir / "001" / "case.md").write_text("---\ntitle: Test 1\n---\n")
+        (test_cases_dir / "001" / "case.md").write_text(
+            "---\ntitle: Test 1\n---\n"
+        )
         (test_cases_dir / "002").mkdir(parents=True)
-        (test_cases_dir / "002" / "case.md").write_text("---\ntitle: Test 2\n---\n")
+        (test_cases_dir / "002" / "case.md").write_text(
+            "---\ntitle: Test 2\n---\n"
+        )
         (test_cases_dir / "003").mkdir(parents=True)
-        (test_cases_dir / "003" / "case.md").write_text("---\ntitle: Test 3\n---\n")
+        (test_cases_dir / "003" / "case.md").write_text(
+            "---\ntitle: Test 3\n---\n"
+        )
 
         result = list_all_test_cases(test_cases_dir)
 
@@ -27,13 +33,17 @@ class TestListAllTestCases:
         """Test that non-numeric directories are ignored"""
         test_cases_dir = tmp_path / "test-cases"
         (test_cases_dir / "001").mkdir(parents=True)
-        (test_cases_dir / "001" / "case.md").write_text("---\ntitle: Test 1\n---\n")
+        (test_cases_dir / "001" / "case.md").write_text(
+            "---\ntitle: Test 1\n---\n"
+        )
         (test_cases_dir / "not-a-test").mkdir(parents=True)
         (test_cases_dir / "not-a-test" / "case.md").write_text(
             "---\ntitle: Test\n---\n"
         )
         (test_cases_dir / "002").mkdir(parents=True)
-        (test_cases_dir / "002" / "case.md").write_text("---\ntitle: Test 2\n---\n")
+        (test_cases_dir / "002" / "case.md").write_text(
+            "---\ntitle: Test 2\n---\n"
+        )
 
         result = list_all_test_cases(test_cases_dir)
 
@@ -43,11 +53,15 @@ class TestListAllTestCases:
         """Test that directories without case.md are ignored"""
         test_cases_dir = tmp_path / "test-cases"
         (test_cases_dir / "001").mkdir(parents=True)
-        (test_cases_dir / "001" / "case.md").write_text("---\ntitle: Test 1\n---\n")
+        (test_cases_dir / "001" / "case.md").write_text(
+            "---\ntitle: Test 1\n---\n"
+        )
         (test_cases_dir / "002").mkdir(parents=True)
         # No case.md in 002
         (test_cases_dir / "003").mkdir(parents=True)
-        (test_cases_dir / "003" / "case.md").write_text("---\ntitle: Test 3\n---\n")
+        (test_cases_dir / "003" / "case.md").write_text(
+            "---\ntitle: Test 3\n---\n"
+        )
 
         result = list_all_test_cases(test_cases_dir)
 
@@ -74,11 +88,17 @@ class TestListAllTestCases:
         """Test that output is sorted numerically"""
         test_cases_dir = tmp_path / "test-cases"
         (test_cases_dir / "010").mkdir(parents=True)
-        (test_cases_dir / "010" / "case.md").write_text("---\ntitle: Test 10\n---\n")
+        (test_cases_dir / "010" / "case.md").write_text(
+            "---\ntitle: Test 10\n---\n"
+        )
         (test_cases_dir / "002").mkdir(parents=True)
-        (test_cases_dir / "002" / "case.md").write_text("---\ntitle: Test 2\n---\n")
+        (test_cases_dir / "002" / "case.md").write_text(
+            "---\ntitle: Test 2\n---\n"
+        )
         (test_cases_dir / "001").mkdir(parents=True)
-        (test_cases_dir / "001" / "case.md").write_text("---\ntitle: Test 1\n---\n")
+        (test_cases_dir / "001" / "case.md").write_text(
+            "---\ntitle: Test 1\n---\n"
+        )
 
         result = list_all_test_cases(test_cases_dir)
 
@@ -91,7 +111,8 @@ class TestGetDecoratedTests:
     def test_get_decorated_tests_with_tc_decorator(self, tmp_path):
         """Test finding tests with @tc decorator"""
         test_file = tmp_path / "test_sample.py"
-        test_file.write_text("""
+        test_file.write_text(
+            """
 from plaintest import tc
 
 @tc("001")
@@ -104,7 +125,8 @@ def test_two():
 
 def test_undecorated():
     pass
-""")
+"""
+        )
 
         result = get_decorated_tests(tmp_path)
 
@@ -117,21 +139,25 @@ def test_undecorated():
     def test_get_decorated_tests_multiple_files(self, tmp_path):
         """Test finding tests across multiple files"""
         test_file1 = tmp_path / "test_first.py"
-        test_file1.write_text("""
+        test_file1.write_text(
+            """
 from plaintest import tc
 
 @tc("001")
 def test_one():
     pass
-""")
+"""
+        )
         test_file2 = tmp_path / "test_second.py"
-        test_file2.write_text("""
+        test_file2.write_text(
+            """
 from plaintest import tc
 
 @tc("002")
 def test_two():
     pass
-""")
+"""
+        )
 
         result = get_decorated_tests(tmp_path)
 
@@ -142,7 +168,8 @@ def test_two():
     def test_get_decorated_tests_same_tc_multiple_tests(self, tmp_path):
         """Test when multiple tests have the same tc_id"""
         test_file = tmp_path / "test_sample.py"
-        test_file.write_text("""
+        test_file.write_text(
+            """
 from plaintest import tc
 
 @tc("001")
@@ -152,7 +179,8 @@ def test_one():
 @tc("001")
 def test_one_variant():
     pass
-""")
+"""
+        )
 
         result = get_decorated_tests(tmp_path)
 
@@ -173,13 +201,15 @@ def test_one_variant():
         nested_dir = tmp_path / "tests" / "integration"
         nested_dir.mkdir(parents=True)
         test_file = nested_dir / "test_nested.py"
-        test_file.write_text("""
+        test_file.write_text(
+            """
 from plaintest import tc
 
 @tc("001")
 def test_nested():
     pass
-""")
+"""
+        )
 
         result = get_decorated_tests(tmp_path)
 
@@ -190,7 +220,8 @@ def test_nested():
     def test_get_decorated_tests_with_class_methods(self, tmp_path):
         """Test finding tests in class methods"""
         test_file = tmp_path / "test_class.py"
-        test_file.write_text("""
+        test_file.write_text(
+            """
 from plaintest import tc
 
 class TestSuite:
@@ -204,7 +235,8 @@ class TestSuite:
 @tc("002")
 def test_function():
     pass
-""")
+"""
+        )
 
         result = get_decorated_tests(tmp_path)
 
@@ -223,15 +255,20 @@ class TestFindUndecoratedTests:
         # Create test cases
         test_cases_dir = tmp_path / "test-cases"
         (test_cases_dir / "001").mkdir(parents=True)
-        (test_cases_dir / "001" / "case.md").write_text("---\ntitle: Test 1\n---\n")
+        (test_cases_dir / "001" / "case.md").write_text(
+            "---\ntitle: Test 1\n---\n"
+        )
         (test_cases_dir / "002").mkdir(parents=True)
-        (test_cases_dir / "002" / "case.md").write_text("---\ntitle: Test 2\n---\n")
+        (test_cases_dir / "002" / "case.md").write_text(
+            "---\ntitle: Test 2\n---\n"
+        )
 
         # Create tests
         tests_dir = tmp_path / "tests"
         tests_dir.mkdir()
         test_file = tests_dir / "test_sample.py"
-        test_file.write_text("""
+        test_file.write_text(
+            """
 from plaintest import tc
 
 @tc("001")
@@ -241,7 +278,8 @@ def test_one():
 @tc("002")
 def test_two():
     pass
-""")
+"""
+        )
 
         result = find_undecorated_tests(test_cases_dir, tmp_path)
 
@@ -255,23 +293,31 @@ def test_two():
         # Create test cases
         test_cases_dir = tmp_path / "test-cases"
         (test_cases_dir / "001").mkdir(parents=True)
-        (test_cases_dir / "001" / "case.md").write_text("---\ntitle: Test 1\n---\n")
+        (test_cases_dir / "001" / "case.md").write_text(
+            "---\ntitle: Test 1\n---\n"
+        )
         (test_cases_dir / "002").mkdir(parents=True)
-        (test_cases_dir / "002" / "case.md").write_text("---\ntitle: Test 2\n---\n")
+        (test_cases_dir / "002" / "case.md").write_text(
+            "---\ntitle: Test 2\n---\n"
+        )
         (test_cases_dir / "003").mkdir(parents=True)
-        (test_cases_dir / "003" / "case.md").write_text("---\ntitle: Test 3\n---\n")
+        (test_cases_dir / "003" / "case.md").write_text(
+            "---\ntitle: Test 3\n---\n"
+        )
 
         # Create tests (only for 001)
         tests_dir = tmp_path / "tests"
         tests_dir.mkdir()
         test_file = tests_dir / "test_sample.py"
-        test_file.write_text("""
+        test_file.write_text(
+            """
 from plaintest import tc
 
 @tc("001")
 def test_one():
     pass
-""")
+"""
+        )
 
         result = find_undecorated_tests(test_cases_dir, tmp_path)
 
@@ -284,13 +330,16 @@ def test_one():
         # Create test cases
         test_cases_dir = tmp_path / "test-cases"
         (test_cases_dir / "001").mkdir(parents=True)
-        (test_cases_dir / "001" / "case.md").write_text("---\ntitle: Test 1\n---\n")
+        (test_cases_dir / "001" / "case.md").write_text(
+            "---\ntitle: Test 1\n---\n"
+        )
 
         # Create tests (including one without a test case)
         tests_dir = tmp_path / "tests"
         tests_dir.mkdir()
         test_file = tests_dir / "test_sample.py"
-        test_file.write_text("""
+        test_file.write_text(
+            """
 from plaintest import tc
 
 @tc("001")
@@ -304,7 +353,8 @@ def test_two():
 @tc("999")
 def test_no_case():
     pass
-""")
+"""
+        )
 
         result = find_undecorated_tests(test_cases_dir, tmp_path)
 
@@ -326,7 +376,8 @@ def test_no_case():
         tests_dir = tmp_path / "tests"
         tests_dir.mkdir()
         test_file = tests_dir / "test_sample.py"
-        test_file.write_text("""
+        test_file.write_text(
+            """
 from plaintest import tc
 
 @tc("001")
@@ -340,7 +391,8 @@ def test_three():
 @tc("005")
 def test_five():
     pass
-""")
+"""
+        )
 
         result = find_undecorated_tests(test_cases_dir, tmp_path)
 
@@ -357,13 +409,15 @@ def test_five():
         tests_dir = tmp_path / "tests"
         tests_dir.mkdir()
         test_file = tests_dir / "test_sample.py"
-        test_file.write_text("""
+        test_file.write_text(
+            """
 from plaintest import tc
 
 @tc("001")
 def test_one():
     pass
-""")
+"""
+        )
 
         result = find_undecorated_tests(test_cases_dir, tmp_path)
 
@@ -376,7 +430,9 @@ def test_one():
         # Create test cases
         test_cases_dir = tmp_path / "test-cases"
         (test_cases_dir / "001").mkdir(parents=True)
-        (test_cases_dir / "001" / "case.md").write_text("---\ntitle: Test 1\n---\n")
+        (test_cases_dir / "001" / "case.md").write_text(
+            "---\ntitle: Test 1\n---\n"
+        )
 
         result = find_undecorated_tests(test_cases_dir, tmp_path)
 

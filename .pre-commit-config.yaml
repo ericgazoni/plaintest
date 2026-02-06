@@ -22,4 +22,4 @@ repos:
     rev: 6.1.0
     hooks:
       - id: flake8
-        exclude: plaintest/template.py
+        exclude: (plaintest/template.py|tests/.*\.py)

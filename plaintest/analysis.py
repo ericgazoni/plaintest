@@ -11,7 +11,8 @@ def list_all_test_cases(test_cases_dir: Path) -> List[str]:
     """
     List all test case IDs from the test-cases directory.
 
-    A valid test case is a directory with a numeric name that contains a case.md file.
+    A valid test case is a directory with a numeric
+    name that contains a case.md file.
 
     Args:
         test_cases_dir: Path to the test-cases directory
@@ -106,7 +107,9 @@ def _extract_tc_decorators(
                     tc_id = _get_tc_id_from_decorators(item.decorator_list)
                     if tc_id:
                         # Build the test node ID with class name
-                        test_node_id = f"{file_path}::{class_name}::{item.name}"
+                        test_node_id = (
+                            f"{file_path}::{class_name}::{item.name}"
+                        )
 
                         if tc_id not in result:
                             result[tc_id] = []
@@ -128,8 +131,13 @@ def _get_tc_id_from_decorators(decorators: List[ast.expr]) -> str | None:
     for decorator in decorators:
         # Handle @tc("001")
         if isinstance(decorator, ast.Call):
-            if isinstance(decorator.func, ast.Name) and decorator.func.id == "tc":
-                if decorator.args and isinstance(decorator.args[0], ast.Constant):
+            if (
+                isinstance(decorator.func, ast.Name)
+                and decorator.func.id == "tc"
+            ):
+                if decorator.args and isinstance(
+                    decorator.args[0], ast.Constant
+                ):
                     return str(decorator.args[0].value)
 
     return None
@@ -147,7 +155,8 @@ def find_undecorated_tests(
     test_cases_dir: Path, tests_root_dir: Path
 ) -> AnalysisResult:
     """
-    Find test cases that don't have corresponding decorated tests and vice versa.
+    Find test cases that don't have corresponding
+    decorated tests and vice versa.
 
     Args:
         test_cases_dir: Path to the test-cases directory
@@ -155,10 +164,10 @@ def find_undecorated_tests(
 
     Returns:
         Object with analysis results:
-         - test_cases_without_tests: list[str],  # TC IDs with no decorated tests
-         - tests_without_test_cases: list[str],  # TC IDs in tests but no case.md
-         - covered_test_cases: list[str],        # TC IDs that have both
-         - decorated_tests: dict[str, list[str]] # All decorated tests by TC ID
+         - test_cases_without_tests  # TC IDs with no decorated tests
+         - tests_without_test_cases  # TC IDs in tests but no case.md
+         - covered_test_cases        # TC IDs that have both
+         - decorated_tests           # All decorated tests by TC ID
     """
     all_test_cases = set(list_all_test_cases(test_cases_dir))
     decorated_tests = get_decorated_tests(tests_root_dir)
@@ -171,7 +180,9 @@ def find_undecorated_tests(
     tests_without_test_cases = sorted(
         decorated_tc_ids - all_test_cases, key=lambda x: int(x)
     )
-    covered_test_cases = sorted(all_test_cases & decorated_tc_ids, key=lambda x: int(x))
+    covered_test_cases = sorted(
+        all_test_cases & decorated_tc_ids, key=lambda x: int(x)
+    )
 
     return AnalysisResult(
         test_cases_without_tests=test_cases_without_tests,

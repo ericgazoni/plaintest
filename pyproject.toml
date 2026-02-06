@@ -16,6 +16,9 @@ dev = [
     "pytest>=9.0.2",
 ]
 
+[tool.black]
+line-length = 79
+
 [project.scripts]
 plaintest = "plaintest.cli:main"
 
