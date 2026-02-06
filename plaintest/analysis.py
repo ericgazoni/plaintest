@@ -87,33 +87,46 @@ def _extract_tc_decorators(
         file_path: Relative path to the file
         result: Dictionary to populate with results
     """
-    for node in ast.walk(tree):
-        # Check function definitions
+    # Use iter_child_nodes to only get top-level nodes (not nested)
+    for node in ast.iter_child_nodes(tree):
+        # Check standalone function definitions
         if isinstance(node, ast.FunctionDef):
-            tc_id = _get_tc_id_from_decorators(node.decorator_list)
-            if tc_id:
-                # Build the test node ID
-                test_node_id = f"{file_path}::{node.name}"
-
-                if tc_id not in result:
-                    result[tc_id] = []
-                result[tc_id].append(test_node_id)
+            _process_function_def(node, file_path, None, result)
 
         # Check class methods
         elif isinstance(node, ast.ClassDef):
             class_name = node.name
             for item in node.body:
                 if isinstance(item, ast.FunctionDef):
-                    tc_id = _get_tc_id_from_decorators(item.decorator_list)
-                    if tc_id:
-                        # Build the test node ID with class name
-                        test_node_id = (
-                            f"{file_path}::{class_name}::{item.name}"
-                        )
+                    _process_function_def(item, file_path, class_name, result)
 
-                        if tc_id not in result:
-                            result[tc_id] = []
-                        result[tc_id].append(test_node_id)
+
+def _process_function_def(
+    func_node: ast.FunctionDef,
+    file_path: Path,
+    class_name: str | None,
+    result: Dict[str, List[str]],
+) -> None:
+    """
+    Process a function definition and extract @tc decorator.
+
+    Args:
+        func_node: AST node for the function
+        file_path: Relative path to the file
+        class_name: Name of the containing class, or None for standalone functions
+        result: Dictionary to populate with results
+    """
+    tc_id = _get_tc_id_from_decorators(func_node.decorator_list)
+    if tc_id:
+        # Build the test node ID
+        if class_name:
+            test_node_id = f"{file_path}::{class_name}::{func_node.name}"
+        else:
+            test_node_id = f"{file_path}::{func_node.name}"
+
+        if tc_id not in result:
+            result[tc_id] = []
+        result[tc_id].append(test_node_id)
 
 
 def _get_tc_id_from_decorators(decorators: List[ast.expr]) -> str | None:

@@ -111,6 +111,7 @@ class TestListAllTestCases:
 class TestGetDecoratedTests:
     """Tests for finding decorated pytest tests"""
 
+    @tc("005")
     def test_get_decorated_tests_with_tc_decorator(self, tmp_path):
         """Test finding tests with @tc decorator"""
         test_file = tmp_path / "test_sample.py"
@@ -137,6 +138,7 @@ def test_undecorated():
         assert result["001"] == [f"test_sample.py::test_one"]
         assert result["002"] == [f"test_sample.py::test_two"]
 
+    @tc("005")
     def test_get_decorated_tests_multiple_files(self, tmp_path):
         """Test finding tests across multiple files"""
         test_file1 = tmp_path / "test_first.py"
@@ -162,6 +164,7 @@ def test_two():
         assert "001" in result
         assert "002" in result
 
+    @tc("005")
     def test_get_decorated_tests_same_tc_multiple_tests(self, tmp_path):
         """Test when multiple tests have the same tc_id"""
         test_file = tmp_path / "test_sample.py"
@@ -191,6 +194,7 @@ def test_one_variant():
 
         assert result == {}
 
+    @tc("006")
     def test_get_decorated_tests_nested_directories(self, tmp_path):
         """Test finding tests in nested directories"""
         nested_dir = tmp_path / "tests" / "integration"
@@ -210,6 +214,7 @@ def test_nested():
         assert "001" in result
         assert "tests/integration/test_nested.py::test_nested" in result["001"]
 
+    @tc("007")
     def test_get_decorated_tests_with_class_methods(self, tmp_path):
         """Test finding tests in class methods"""
         test_file = tmp_path / "test_class.py"

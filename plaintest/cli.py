@@ -129,12 +129,31 @@ def report(tests_dir: Path):
         console.print(table)
         console.print()
 
-    # Display warning about tests without cases
+    # Display tests without corresponding test cases
     if results.tests_without_test_cases:
         console.print(
-            f"[yellow]⚠ Found {len(results.tests_without_test_cases)} "
-            f"test(s) marked with non-existent case IDs[/yellow]"
+            "[bold yellow]Tests Marked With Non-Existent Case IDs[/bold yellow]"
         )
+        table = Table(show_header=True, header_style="bold magenta")
+        table.add_column("Case ID", style="cyan", width=12, justify="center")
+        table.add_column("Test File", style="dim")
+        table.add_column("Test Name", style="yellow")
+
+        for tc_id in results.tests_without_test_cases:
+            # Get all tests for this case ID
+
+            for test_node in results.decorated_tests[tc_id]:
+                # Parse test_node format: "path/to/file.py::TestClass::test_name" or "path/to/file.py::test_name"
+                parts = test_node.split("::")
+                test_file = parts[0]
+                test_name = "::".join(
+                    parts[1:]
+                )  # Join back in case there's a class
+
+                table.add_row(tc_id, test_file, test_name)
+
+        console.print(table)
+        console.print()
 
     # Exit with the number of uncovered cases
     raise SystemExit(uncovered_count)
