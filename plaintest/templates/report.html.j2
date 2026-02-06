@@ -10,7 +10,7 @@
 </head>
 <body>
     <header>
-        <h1>📋 Plaintest Validation Report</h1>
+        <h1>Plaintest Validation Report</h1>
         <p>Test Case Specifications vs. Pytest Implementations</p>
     </header>
 
@@ -34,7 +34,15 @@
                     <h3>Test Implementation</h3>
                     {% for test_src in tc.test_sources %}
                     <div class="test-source">
-                        <div class="test-node-id">{{ test_src.node_id }}</div>
+                        <div class="test-node-id">
+                            {% for part in test_src.node_id_parts %}
+                                {% if loop.last %}
+                                    <span class="node-segment node-segment-last">{{ part }}</span>
+                                {% else %}
+                                    <span class="node-segment node-segment-dim">{{ part }}</span><span class="node-separator">&nbsp;&gt;</span>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
                         <pre><code class="language-python">{{ test_src.source | safe }}</code></pre>
                     </div>
                     {% endfor %}

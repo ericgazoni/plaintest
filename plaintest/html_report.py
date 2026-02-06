@@ -211,10 +211,12 @@ def _generate_html_template(test_case_data: list[dict]) -> str:
     report_template = env.get_template("report.html.j2")
     styles_template = env.get_template("styles.css.j2")
 
-    # Process test case data to highlight source code
+    # Process test case data to highlight source code and split node IDs
     for tc in test_case_data:
         for test_src in tc["test_sources"]:
             test_src["source"] = _highlight_python_code(test_src["source"])
+            # Split node_id by :: for better display
+            test_src["node_id_parts"] = test_src["node_id"].split("::")
 
     # Render the styles
     styles = styles_template.render()
