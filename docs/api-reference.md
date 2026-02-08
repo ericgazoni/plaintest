@@ -161,7 +161,7 @@ plaintest html-report [OPTIONS]
 
 Generates a side-by-side HTML report showing:
 
-- Test case markdown content with rendered formatting
+- Test case Markdown content with rendered formatting
 - Embedded images and media
 - Linked pytest test implementations with syntax highlighting
 - Test case metadata (title, tags)
@@ -436,7 +436,7 @@ print(f"Report generated: {output}")
 
 ### Test Case File Format
 
-Test cases are markdown files with YAML frontmatter:
+Test cases are Markdown files with YAML frontmatter:
 
 ```markdown
 ---
@@ -447,7 +447,7 @@ tags: array of strings (optional)
 
 # Markdown content
 
-Any markdown content including:
+Any Markdown content including:
 - Headers
 - Lists  
 - Code blocks

@@ -29,7 +29,7 @@ Navigate to your project directory and initialize plaintest:
 plaintest init
 ```
 
-This creates a `test-cases` directory where all your test case markdown files will be stored.
+This creates a `test-cases` directory where all your test case Markdown files will be stored.
 
 ```
 your-project/
@@ -46,7 +46,7 @@ Create a test case using the CLI:
 plaintest add "User can login successfully"
 ```
 
-This creates a structured markdown file at `test-cases/001/case.md`:
+This creates a structured Markdown file at `test-cases/001/case.md`:
 
 ```markdown
 ---
@@ -63,7 +63,7 @@ tags: []
 
 ## Step 3: Write Your Test Case
 
-Edit the generated markdown file to document your test case:
+Edit the generated Markdown file to document your test case:
 
 ```markdown
 ---
@@ -166,7 +166,7 @@ plaintest html-report
 
 This generates `.plaintest/plaintest-report.html` that you can open in your browser to see:
 
-- Test cases with their full markdown content
+- Test cases with their full Markdown content
 - Linked pytest test implementations with syntax highlighting
 - Images and media embedded in test cases
 - Tags and metadata

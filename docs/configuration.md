@@ -20,7 +20,7 @@ test_cases_dir = "test-cases"
 **Type:** `string`  
 **Default:** `"test-cases"`
 
-The directory where test case markdown files are stored.
+The directory where test case Markdown files are stored.
 
 ```toml
 [tool.plaintest]
@@ -61,7 +61,7 @@ test-cases/
 
 Each directory contains:
 
-- `case.md` - The test case markdown file (required)
+- `case.md` - The test case Markdown file (required)
 - Any media files referenced in the test case (optional)
 
 ## Test Case Format
@@ -405,7 +405,7 @@ This creates traceability between requirements and tests.
 
 1. Ensure at least one test has the `@tc()` decorator
 2. Check that the output directory is writable
-3. Verify test case markdown files are valid
+3. Verify test case Markdown files are valid
 
 ### Import errors
 

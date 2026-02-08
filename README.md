@@ -1,18 +1,18 @@
 # plaintest
 
-A pytest plugin and CLI tool for managing plain-text test cases with markdown documentation.
+A pytest plugin and CLI tool for managing plain-text test cases with Markdown documentation.
 
 ## Overview
 
 `plaintest` helps you bridge the gap between human-readable test case documentation and automated tests. 
-Write your test cases in simple markdown files, link them to pytest tests using decorators, 
-and generate beautiful HTML reports showing test coverage and results.
+Write your test cases in simple Markdown files, link them to pytest tests using decorators, 
+and generate HTML reports showing test coverage and results.
 
 ## Rationale
 Many teams struggle with test documentation scattered across multiple systems: 
 requirements in Jira, test cases in TestRail, implementation details in code comments. 
 This fragmentation makes it hard to understand what's being tested and why. 
-By keeping test cases as markdown files in your repository alongside your code, 
+By keeping test cases as Markdown files in your repository alongside your code, 
 you maintain a single source of truth that's version-controlled, code-review friendly, 
 and easily accessible to both humans and LLMs. 
 
@@ -41,7 +41,7 @@ plaintest init
 plaintest add "User login functionality"
 ```
 
-This creates a markdown file like `test-cases/001/case.md`:
+This creates a Markdown file like `test-cases/001/case.md`:
 ```markdown
 ---
 title: User login functionality

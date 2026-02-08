@@ -202,7 +202,7 @@ test-cases/
     └── success-dashboard.png
 ```
 
-2. Reference it in your markdown:
+2. Reference it in your Markdown:
 ```markdown
 ---
 title: User login flow
