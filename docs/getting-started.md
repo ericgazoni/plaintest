@@ -61,6 +61,9 @@ tags: []
 
 ```
 
+!!! tip "Customize the template"
+    You can customize the test case template by creating a `.template` file in your `test-cases` directory. The template uses Jinja2 syntax and allows you to add custom sections, fields, and structure. See [Configuration - Custom Template](configuration.md#custom-template) for details.
+
 ## Step 3: Write Your Test Case
 
 Edit the generated Markdown file to document your test case:

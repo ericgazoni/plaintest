@@ -5,6 +5,7 @@ This page provides practical examples of using plaintest in different scenarios.
 ## Table of Contents
 
 - [Basic Usage](#basic-usage)
+- [Customizing Test Case Templates](#customizing-test-case-templates)
 - [Working with Multiple Test Cases](#working-with-multiple-test-cases)
 - [Using Tags to Organize Tests](#using-tags-to-organize-tests)
 - [Linking Multiple Tests to One Case](#linking-multiple-tests-to-one-case)

@@ -55,6 +55,8 @@ tags: []
 
 ```
 
+   *Tip: Create a `.template` file in your test cases directory to customize the template using Jinja2 syntax.*
+
 3. **Link a pytest test to the test case**:
 ```python
 import pytest

@@ -1,5 +1,5 @@
 from pathlib import Path
-from jinja2 import Environment, BaseLoader
+from jinja2 import Environment, BaseLoader, TemplateNotFound
 
 DEFAULT_TEMPLATE = """---
 title: {{ title | capitalize }}
@@ -20,16 +20,18 @@ class CustomTemplateLoader(BaseLoader):
         self.test_cases_dir = test_cases_dir
 
     def get_source(self, environment, template):
-        custom_template_path = self.test_cases_dir / ".template"
-        if custom_template_path.exists():
-            source = custom_template_path.read_text()
-            return (
-                source,
-                str(custom_template_path),
-                lambda: True,
-            )
-        else:
-            return DEFAULT_TEMPLATE, None, lambda: True
+        if template == "case":
+            custom_template_path = self.test_cases_dir / ".template"
+            if custom_template_path.exists():
+                source = custom_template_path.read_text()
+                return (
+                    source,
+                    str(custom_template_path),
+                    lambda: True,
+                )
+            else:
+                return DEFAULT_TEMPLATE, None, lambda: True
+        raise TemplateNotFound(template)
 
 
 def get_case_template(test_cases_dir: Path) -> Environment:
@@ -40,5 +42,5 @@ def get_case_template(test_cases_dir: Path) -> Environment:
 
 def render_case_template(test_cases_dir: Path, **kwargs) -> str:
     env = get_case_template(test_cases_dir)
-    template = env.get_template(None)
+    template = env.get_template("case")
     return template.render(**kwargs)

@@ -64,6 +64,44 @@ Each directory contains:
 - `case.md` - The test case Markdown file (required)
 - Any media files referenced in the test case (optional)
 
+## Custom Template
+
+plaintest allows you to customize the template used when creating new test cases with `plaintest add`. This is done by creating a `.template` file in your test cases directory.
+
+### Using a Custom Template
+
+Create a file named `.template` in your configured test cases directory:
+
+```
+test-cases/
+├── .template          # Custom template file
+├── 001/
+│   └── case.md
+├── 002/
+│   └── case.md
+└── ...
+```
+
+**Note:** for now only the `title` variable is available in the template.
+
+### Default Template
+
+If no `.template` file exists, plaintest uses this default template:
+
+```jinja2
+---
+title: {{ title | capitalize }}
+tags: []
+---
+
+## Steps
+1. 
+
+## Expected
+
+
+```
+
 ## Test Case Format
 
 ### Frontmatter
