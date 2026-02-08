@@ -6,7 +6,7 @@ from rich.prompt import Prompt, Confirm
 from rich.table import Table
 from plaintest.analysis import find_undecorated_tests, get_decorated_tests
 from plaintest.config import get_test_cases_dir, get_max_tc_id
-from plaintest.template import TEMPLATE
+from plaintest.template import render_case_template
 from plaintest.html_report import generate_html_report
 
 console = Console()
@@ -49,7 +49,12 @@ def add(title: str):
         output_dir = test_dir / f"{tc_id:0>3}"
         output_dir.mkdir(parents=True, exist_ok=True)
         tc_file = output_dir / "case.md"
-        tc_file.write_text(TEMPLATE.safe_substitute(title=title.capitalize()))
+        tc_file.write_text(
+            render_case_template(
+                test_dir,
+                title=title.capitalize(),
+            )
+        )
         console.print(f"[green]✓[/green] Created {tc_file}")
 
         # Ask if user wants to add another
