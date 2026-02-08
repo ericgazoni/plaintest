@@ -91,14 +91,14 @@ tags: []
 
 ---
 
-### `plaintest report`
+### `plaintest coverage`
 
 Generate a terminal-based coverage report.
 
 **Usage:**
 
 ```bash
-plaintest report [OPTIONS]
+plaintest coverage [OPTIONS]
 ```
 
 **Options:**
@@ -124,7 +124,7 @@ Analyzes test coverage by comparing test cases with pytest tests decorated with 
 **Example Output:**
 
 ```bash
-$ plaintest report
+$ plaintest coverage
 Analyzing test coverage...
 
 Total test cases: 5
@@ -142,14 +142,14 @@ Cases without tests
 
 ---
 
-### `plaintest html-report`
+### `plaintest report`
 
 Generate an HTML report showing test cases alongside their pytest implementations.
 
 **Usage:**
 
 ```bash
-plaintest html-report [OPTIONS]
+plaintest report [OPTIONS]
 ```
 
 **Options:**
@@ -176,17 +176,17 @@ Generates a side-by-side HTML report showing:
 
 ```bash
 # Default output
-$ plaintest html-report
+$ plaintest report
 Analyzing tests and generating report...
 ✓ HTML report generated: .plaintest/plaintest-report.html
 Open the file in a browser to view the report
 
 # Custom output location
-$ plaintest html-report --output docs/coverage.html
+$ plaintest report --output docs/coverage.html
 ✓ HTML report generated: docs/coverage.html
 
 # Custom tests directory
-$ plaintest html-report --tests-dir src/tests
+$ plaintest report --tests-dir src/tests
 ```
 
 ## Python API
@@ -765,7 +765,7 @@ Combine plaintest with pytest-html:
 
 ```bash
 pytest --html=report.html
-plaintest html-report
+plaintest report
 ```
 
 ### Coverage.py
@@ -774,7 +774,7 @@ Track code coverage alongside test case coverage:
 
 ```bash
 pytest --cov=myapp --cov-report=html
-plaintest report
+plaintest coverage
 ```
 
 ### allure-pytest

@@ -76,7 +76,7 @@ def add(title: str):
     default=Path("tests"),
     help="Directory containing test files",
 )
-def report(tests_dir: Path):
+def coverage(tests_dir: Path):
     """Generate a coverage report showing test case status"""
     test_cases_dir = get_test_cases_dir()
 
@@ -178,7 +178,7 @@ def report(tests_dir: Path):
     default=Path(".plaintest/plaintest-report.html"),
     help="Output path for the HTML report",
 )
-def html_report(tests_dir: Path, output: Path):
+def report(tests_dir: Path, output: Path):
     """Generate HTML report showing test cases alongside their pytest implementations"""
     test_cases_dir = get_test_cases_dir()
 

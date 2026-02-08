@@ -56,7 +56,7 @@ def test_user_login():
 
 Generate a report:
 ```bash
-plaintest report
+plaintest coverage
 ```
 
 ## Installation

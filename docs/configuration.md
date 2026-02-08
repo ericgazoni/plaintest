@@ -218,14 +218,14 @@ plaintest add "Test case title"
 
 **Options:** None
 
-### `plaintest report`
+### `plaintest coverage`
 
 Generate a terminal-based coverage report.
 
 **Usage:**
 
 ```bash
-plaintest report [OPTIONS]
+plaintest coverage [OPTIONS]
 ```
 
 **Options:**
@@ -236,10 +236,10 @@ plaintest report [OPTIONS]
 
 ```bash
 # Use default tests directory
-plaintest report
+plaintest coverage
 
 # Specify tests directory
-plaintest report --tests-dir src/tests
+plaintest coverage --tests-dir src/tests
 ```
 
 **Exit Codes:**
@@ -251,14 +251,14 @@ The command exits with the number of uncovered test cases:
 
 This is useful for CI/CD pipelines to fail builds on low coverage.
 
-### `plaintest html-report`
+### `plaintest report`
 
 Generate an HTML report showing test cases alongside their implementations.
 
 **Usage:**
 
 ```bash
-plaintest html-report [OPTIONS]
+plaintest report [OPTIONS]
 ```
 
 **Options:**
@@ -270,16 +270,16 @@ plaintest html-report [OPTIONS]
 
 ```bash
 # Use defaults
-plaintest html-report
+plaintest report
 
 # Custom output location
-plaintest html-report --output reports/test-cases.html
+plaintest report --output reports/test-cases.html
 
 # Custom tests directory
-plaintest html-report --tests-dir src/tests
+plaintest report --tests-dir src/tests
 
 # Both options
-plaintest html-report --tests-dir src/tests --output docs/coverage.html
+plaintest report --tests-dir src/tests --output docs/coverage.html
 ```
 
 ## Multiple Projects Configuration
@@ -298,10 +298,10 @@ Then use command-line options to work with different test suites:
 
 ```bash
 # Integration tests
-plaintest report --tests-dir tests/integration
+plaintest coverage --tests-dir tests/integration
 
 # Unit tests (with separate test cases)
-plaintest report --tests-dir tests/unit
+plaintest coverage --tests-dir tests/unit
 ```
 
 ### Multiple Configuration Files
@@ -355,6 +355,9 @@ test-cases/test10/
 ```
 
 ### 3. Document Your Tagging Strategy
+
+!!! note
+    Tags are an early feature and not used yet outside the HTML report.
 
 Create a convention for tags and document it in your project:
 
@@ -421,7 +424,7 @@ This creates traceability between requirements and tests.
 
 ### Test cases not found
 
-**Problem:** `plaintest report` shows no test cases.
+**Problem:** `plaintest coverage` shows no test cases.
 
 **Solution:** Check your `test_cases_dir` configuration matches the actual directory name.
 
@@ -434,82 +437,3 @@ This creates traceability between requirements and tests.
 1. Verify the test case ID exists in the test cases directory
 2. Check that the ID in `@tc("001")` matches the directory name
 3. Ensure the directory name is zero-padded (e.g., `001` not `1`)
-
-### HTML report not generated
-
-**Problem:** `plaintest html-report` fails or produces empty report.
-
-**Solution:**
-
-1. Ensure at least one test has the `@tc()` decorator
-2. Check that the output directory is writable
-3. Verify test case Markdown files are valid
-
-### Import errors
-
-**Problem:** `from plaintest.markers import tc` fails.
-
-**Solution:**
-
-1. Ensure plaintest is installed: `pip install plaintest`
-2. Check that you're in the correct virtual environment
-3. Verify installation: `pip show plaintest`
-
-## Advanced Configuration Examples
-
-### Large Project Setup
-
-```toml
-[project]
-name = "myapp"
-version = "1.0.0"
-
-[tool.plaintest]
-test_cases_dir = "docs/test-cases"
-
-[tool.pytest.ini_options]
-testpaths = ["tests"]
-python_files = ["test_*.py"]
-python_classes = ["Test*"]
-python_functions = ["test_*"]
-markers = [
-    "test_case: links test to a test case ID",
-    "smoke: smoke tests",
-    "integration: integration tests",
-]
-```
-
-### Microservices Setup
-
-Each service has its own test cases:
-
-```toml
-# services/auth/pyproject.toml
-[tool.plaintest]
-test_cases_dir = "test-cases"
-
-# services/payments/pyproject.toml
-[tool.plaintest]
-test_cases_dir = "test-cases"
-
-# services/orders/pyproject.toml
-[tool.plaintest]
-test_cases_dir = "test-cases"
-```
-
-Generate reports per service:
-
-```bash
-cd services/auth && plaintest report
-cd services/payments && plaintest report
-cd services/orders && plaintest report
-```
-
-## Getting Help
-
-If you encounter issues or have questions:
-
-1. Check the [Usage Examples](usage-examples.md) for common patterns
-2. Review the [API Reference](api-reference.md) for detailed information
-3. Open an issue on GitHub with your configuration and error messages
-

@@ -69,7 +69,7 @@ def test_user_login():
 
 4. **Generate a coverage report**:
 ```bash
-plaintest report
+plaintest coverage
 ```
 
 ## Configuration
@@ -85,8 +85,8 @@ test_cases_dir = "test-cases"
 
 - `plaintest init` - Initialize test cases directory
 - `plaintest add [TITLE]` - Interactively add new test case(s)
-- `plaintest report` - Generate terminal-based coverage report
-- `plaintest html-report` - Generate side-by-side HTML report
+- `plaintest coverage` - Generate terminal-based coverage report
+- `plaintest report` - Generate side-by-side HTML report
 
 ## License
 

@@ -131,7 +131,7 @@ pytest
 See which test cases are covered by automated tests:
 
 ```bash
-plaintest report
+plaintest coverage
 ```
 
 This displays a terminal report showing:
@@ -164,7 +164,7 @@ Cases without tests
 Create a side-by-side HTML report showing test cases and their implementations:
 
 ```bash
-plaintest html-report
+plaintest report
 ```
 
 This generates `.plaintest/plaintest-report.html` that you can open in your browser to see:

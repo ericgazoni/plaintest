@@ -292,11 +292,11 @@ jobs:
         run: pytest
       
       - name: Check test case coverage
-        run: plaintest report
+        run: plaintest coverage
       
       - name: Generate HTML report
         if: always()
-        run: plaintest html-report
+        run: plaintest report
       
       - name: Upload HTML report
         if: always()
@@ -316,8 +316,8 @@ test:
     - pip install -e .
     - pip install pytest
     - pytest
+    - plaintest coverage
     - plaintest report
-    - plaintest html-report
   artifacts:
     when: always
     paths:
@@ -347,13 +347,13 @@ pipeline {
         
         stage('Coverage Report') {
             steps {
-                sh 'plaintest report || true'
+                sh 'plaintest coverage || true'
             }
         }
         
         stage('HTML Report') {
             steps {
-                sh 'plaintest html-report'
+                sh 'plaintest report'
                 publishHTML([
                     reportDir: '.plaintest',
                     reportFiles: 'plaintest-report.html',
@@ -367,18 +367,18 @@ pipeline {
 
 ### Failing the Build on Low Coverage
 
-The `plaintest report` command exits with the number of uncovered test cases, which can be used to fail CI builds:
+The `plaintest coverage` command exits with the number of uncovered test cases, which can be used to fail CI builds:
 
 ```bash
 # In your CI script
-plaintest report
+plaintest coverage
 # Build will fail if there are any uncovered test cases
 ```
 
 To allow some uncovered cases, check the exit code:
 
 ```bash
-plaintest report
+plaintest coverage
 coverage_exit_code=$?
 if [ $coverage_exit_code -gt 5 ]; then
     echo "Too many uncovered test cases: $coverage_exit_code"
