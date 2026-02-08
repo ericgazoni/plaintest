@@ -1,6 +1,6 @@
 [project]
 name = "plaintest"
-version = "0.1.0"
+version = "0.2.0"
 description = "A pytest plugin and CLI tool for managing plain-text test cases with markdown documentation"
 license = "MIT"
 authors = [
