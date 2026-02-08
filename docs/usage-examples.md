@@ -23,15 +23,19 @@ The `add` command supports interactive creation of multiple test cases:
 plaintest add
 ```
 
-You'll be prompted for each test case title:
+You'll be prompted for each test case title. Press Ctrl+C when done:
 
 ```
+Press Ctrl+C when done adding test cases
+
 Enter test case title: User registration with valid data
 ✓ Created test-cases/001/case.md
-Add another test case? [Y/n]: y
+
 Enter test case title: User registration with invalid email
 ✓ Created test-cases/002/case.md
-Add another test case? [Y/n]: n
+
+Enter test case title: ^C
+
 Done!
 ```
 

@@ -209,10 +209,10 @@ Add new test case(s) interactively.
 **Usage:**
 
 ```bash
-# Interactive mode
+# Interactive mode - continuously add test cases, press Ctrl+C when done
 plaintest add
 
-# With title argument
+# With title argument - creates a single test case
 plaintest add "Test case title"
 ```
 

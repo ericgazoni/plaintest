@@ -2,7 +2,7 @@ import click
 import frontmatter
 from pathlib import Path
 from rich.console import Console
-from rich.prompt import Prompt, Confirm
+from rich.prompt import Prompt
 from rich.table import Table
 from plaintest.analysis import find_undecorated_tests, get_decorated_tests
 from plaintest.config import get_test_cases_dir, get_max_tc_id
@@ -39,32 +39,42 @@ def add(title: str):
         )
         test_dir.mkdir(parents=True, exist_ok=True)
 
-    while True:
-        # Get title from argument or prompt
-        if title is None:
-            title = Prompt.ask("[bold cyan]Enter test case title[/bold cyan]")
+    # Check if in interactive mode (no title provided)
+    interactive_mode = title is None
 
-        # Create test case
-        tc_id = get_max_tc_id(test_dir) + 1
-        output_dir = test_dir / f"{tc_id:0>3}"
-        output_dir.mkdir(parents=True, exist_ok=True)
-        tc_file = output_dir / "case.md"
-        tc_file.write_text(
-            render_case_template(
-                test_dir,
-                title=title.capitalize(),
+    if interactive_mode:
+        console.print("[dim]Press Ctrl+C when done adding test cases[/dim]\n")
+
+    try:
+        while True:
+            # Get title from argument or prompt
+            if title is None:
+                title = Prompt.ask(
+                    "[bold cyan]Enter test case title[/bold cyan]"
+                )
+
+            # Create test case
+            tc_id = get_max_tc_id(test_dir) + 1
+            output_dir = test_dir / f"{tc_id:0>3}"
+            output_dir.mkdir(parents=True, exist_ok=True)
+            tc_file = output_dir / "case.md"
+            tc_file.write_text(
+                render_case_template(
+                    test_dir,
+                    title=title.capitalize(),
+                )
             )
-        )
-        console.print(f"[green]✓[/green] Created {tc_file}")
+            console.print(f"[green]✓[/green] Created {tc_file}\n")
 
-        # Ask if user wants to add another
-        if not Confirm.ask(
-            "[bold]Add another test case?[/bold]", default=True
-        ):
-            break
+            # If not in interactive mode, exit after creating one test case
+            if not interactive_mode:
+                break
 
-        # Reset title for next iteration
-        title = None
+            # Reset title for next iteration
+            title = None
+
+    except KeyboardInterrupt:
+        console.print("\n")  # Add newline after Ctrl+C
 
     console.print("[bold green]Done![/bold green]")
 

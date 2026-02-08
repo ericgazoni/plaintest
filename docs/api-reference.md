@@ -49,7 +49,7 @@ plaintest add [TITLE]
 
 **Description:**
 
-Creates a new test case with a unique ID in the next available numbered directory. If no title is provided, enters interactive mode to create multiple test cases.
+Creates a new test case with a unique ID in the next available numbered directory. If no title is provided, enters interactive mode where you can continuously add test cases. Press Ctrl+C when done.
 
 **Options:** None
 
@@ -60,17 +60,23 @@ Creates a new test case with a unique ID in the next available numbered director
 **Examples:**
 
 ```bash
-# Interactive mode
+# Interactive mode - continuously add test cases
 $ plaintest add
+Press Ctrl+C when done adding test cases
+
 Enter test case title: User login
 ✓ Created test-cases/001/case.md
-Add another test case? [Y/n]: n
+
+Enter test case title: User registration
+✓ Created test-cases/002/case.md
+
+Enter test case title: ^C
 Done!
 
-# With title argument
+# With title argument - creates a single test case
 $ plaintest add "User registration"
 ✓ Created test-cases/002/case.md
-Add another test case? [Y/n]: n
+
 Done!
 ```
 
