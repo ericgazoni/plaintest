@@ -18,6 +18,13 @@ dependencies = [
     "rich>=13.0.0",
 ]
 
+[project.urls]
+Homepage = "https://github.com/ericgazoni/plaintest"
+Documentation = "https://plaintest.readthedocs.io/"
+Repository = "https://github.com/ericgazoni/plaintest"
+Issues = "https://github.com/ericgazoni/plaintest/issues"
+Changelog = "https://github.com/ericgazoni/plaintest/releases"
+
 [dependency-groups]
 dev = [
     "mkdocs>=1.6.1",
